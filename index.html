@@ -1,0 +1,74 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-BANK BACKEND JS</title>
+</head>
+<body>
+<h1>T-BANK BACKEND JS</h1>
+
+<button id="clearCache">Очистить кэш</button>
+<button id="fetchCat">Получить 404</button>
+<button id="fetchCat200">Получить 200</button>
+<button id="fetchCat500">Получить 500</button>
+<button id="resizeCache">Изменить кэш</button>
+<div id="result"></div>
+
+<script>
+    document.getElementById('fetchCat').addEventListener('click', async () => {
+        try {
+            const response = await fetch('/cats/404');
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            document.getElementById('result').innerHTML = `<img src="${url}" alt="Cat Image">`;
+        } catch (error) {
+            document.getElementById('result').innerText = 'Ошибка при получении данных';
+        }
+    });
+
+    document.getElementById('fetchCat200').addEventListener('click', async () => {
+        try {
+            const response = await fetch('/cats/200');
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            document.getElementById('result').innerHTML = `<img src="${url}" alt="Cat Image">`;
+        } catch (error) {
+            document.getElementById('result').innerText = 'Ошибка при получении данных';
+        }
+    });
+
+    document.getElementById('fetchCat500').addEventListener('click', async () => {
+        try {
+            const response = await fetch('/cats/500');
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            document.getElementById('result').innerHTML = `<img src="${url}" alt="Cat Image">`;
+        } catch (error) {
+            document.getElementById('result').innerText = 'Ошибка при получении данных';
+        }
+    });
+
+    document.getElementById('clearCache').addEventListener('click', async () => {
+        const response = await fetch('/cache/clear', {
+            method: 'POST'
+        });
+        const result = await response.text();
+        alert(result);
+    });
+
+    document.getElementById('resizeCache').addEventListener('click', async () => {
+        const newSize = prompt('Введите размер кэша:');
+        if (newSize) {
+            const response = await fetch(`/cache/resize?size=${newSize}`, {
+                method: 'POST'
+            });
+            const result = await response.text();
+            alert(result);
+        }
+    });
+
+</script>
+</body>
+</html>
